@@ -3,7 +3,7 @@
 OCAML=ocamlopt
 OCAMLFLAGS = -I +sdl
 OCAMLLD = bigarray.cmxa sdl.cmxa sdlloader.cmxa
-FILES = binarization.ml tChar.ml  ocr_main.ml
+FILES = binarization.ml types.ml  ocr_main.ml
 SORTIE = -o ocr_main
 
 tpsdl:
