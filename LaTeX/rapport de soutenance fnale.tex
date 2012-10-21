@@ -135,14 +135,6 @@ Sur cette image, le pixel rouge est le pixel courant  et les autres pixels en bl
 Notre algorithme de binarisation est simple mais très rapide !  Nous parcourons l'image et lorsque nous sommes sur le pixel courant, on récupère sa couleur. \\
 Si elle est supérieure ou égale à la moyenne entre la couleur blanche et noire, on met le pixel courant à blanc, sinon, à noir.\\
 
-
-\subsection{Amplifier les marques des caractères}
-
-Dans le cas où l'image que l'utilisateur donne, a un fond d'une couleur différente de blanc, il faut que notre logiciel soit en mesure de distinguer fond (dont la couleur doit changer) et les objets que sont les caractères. 
-Pour atteindre cet objectif, il faut effectuer une sorte de seuillage. \\
-Nous parcourons donc l'image et récupérons son niveau de gris. La valeur obtenue (qui est un entier) appelée n, entraînera l'incrémentation du compteur nb (initialisé à zéro au départ dans toutes les cases) dans la case n. \\
-Cela va nous permettre de recréer virtuellement un histogramme : graphique en deux dimensions montrant à l'aide de "pics" le nombre de pixels qui ont un niveau de gris en commun. Sur cet objet, les niveaux de gris sont classés par ordre croissant.  A un niveau de gris particulier, on va pouvoir noter une très grande différence du nombre de pixels ayant une valeur de gris i et un niveau de gris i+1. Ce passage est défini comme le seuil. C'est lui qui nous donnera une indication de la valeur de niveau de gris et par conséquent, nous permettra de ne prendre en compte que les caractères ou le fond.\\
-
 \begin{center} \includegraphics[scale=1.50]{seuil} \end{center}
 
 \newpage
@@ -203,6 +195,15 @@ Mon coéquipier Antoine peut alors analyser ceux-ci en détails et en extraire l
 
 \section{Le site web}
 Pour que des personnes extérieures au projet puissent suivre notre avancée, nous avons développé un site web avec le logiciel wordpress. Il est disponible à http://www.opticalcharacterrecognition.wordpress.com/ . Sont disponibles des présentations de l'équipe "Renaissance du travail totalitaire", le téléchargement de ce présent rapport et le logiciel d'OCR. Nous avons choisi un thème très simple mais toutefois en lien direct avec les caractères -thème principal de l'OCR - : Pilcrow. Celui-ci nous permet de mettre une image de fond et une image d'en-tête personnalisées. Nous avons respectivement choisi l'image d'un parchemin et l'image d'un chameau en calligramme car ils rappellent tout deux l'essence même du projet : l'écriture sous toute ses formes ! De plus, le chameau nous semblait tout à fait adapté aux conditions de réalisation du projet ! 
+
+\section{Dans le prochain episode}
+\subsection{Amplifier les marques des caractères}
+
+Dans le cas où l'image que l'utilisateur donne, a un fond d'une couleur différente de blanc, il faut que notre logiciel soit en mesure de distinguer fond (dont la couleur doit changer) et les objets que sont les caractères. 
+Pour atteindre cet objectif, nous effectuerons une methode de seuillage. \\
+Nous parcourerons donc l'image et récupérerons son niveau de gris. La valeur obtenue (qui est un entier) appelée n, entraînera l'incrémentation du compteur nb (initialisé à zéro au départ dans toutes les cases) dans la case n. \\
+Cela nous permettra de recréer virtuellement un histogramme : graphique en deux dimensions montrant à l'aide de "pics" le nombre de pixels qui ont un niveau de gris en commun. Sur cet objet, les niveaux de gris sont classés par ordre croissant.  A un niveau de gris particulier, on va pouvoir noter une très grande différence du nombre de pixels ayant une valeur de gris i et un niveau de gris i+1. Ce passage est défini comme le seuil. C'est lui qui nous donnera une indication de la valeur de niveau de gris et par conséquent, nous permettra de ne prendre en compte que les caractères ou le fond.\\
+
 
 
 \section{En conclusion}

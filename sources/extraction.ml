@@ -16,7 +16,6 @@ let lineDarkness img nb =
 (*Prend une image en parametre, retourne la liste d'entiers correspondant au
  * nombre de pixels noirs par lignes*)
 let shadowX img =
-(* let nb = (Sdlvideo.surface_info img).Sdlvideo.h in*)
 	let rec shadowXrec img nb listResult =
 		if nb < 0
 	    then listResult
@@ -40,25 +39,39 @@ let binarizeLines img =
   let blackList = shadowX img in
   let rec binRec m = function
     |[]   -> []
-    |nb::l -> if ((float)nb > m /. 8.)
-    then 1::(binRec m l)
-    else 0::(binRec m l)
+    |nb::l -> if ((float)nb > m /. 32.)
+    then 0::(binRec m l)
+    else 1::(binRec m l)
   in binRec (moyenne blackList) blackList
+
+let invBin listBin =
+	let rec inv l2 = function
+		|[] -> l2
+		|e::l1 -> inv (e::l2) l1
+	in inv [] listBin
+
+(*Prend une liste de chiffres binaires et lui enleve les *)
+let rec suppLostWhites = function
+	|[] -> []
+	|1::0::1::l -> 1::1::(suppLostWhites (1::l))
+	|1::0::0::1::l -> 1::1::1::(suppLostWhites (1::l))
+	|1::0::0::0::1::l -> 1::1::1::1::(suppLostWhites (1::l))
+	|e::l -> e::(suppLostWhites l)
 
 
 (*Prend l'image, retourne une liste de lignes grace a la liste binaire*)
 let firstListLines img =
-	let binList = binarizeLines img and
+	let binList = suppLostWhites (invBin(binarizeLines img)) and
 			imgWidth = Image_prop.get_width img in
 	let rec findNextLine listOfLines x = function
 		|[]   -> listOfLines
-		|0::l -> findNextLine listOfLines (x+1) l
-		|1::l -> findEndOfLine listOfLines (x+1) x l
+		|1::l -> findNextLine listOfLines (x+1) l
+		|0::l -> findEndOfLine listOfLines (x+1) x l
 		|_ -> invalid_arg "firstListLines"
 	and findEndOfLine listOfLines x start = function
-		|[]   -> (Types.newline (x-1-start) (x-1) imgWidth img)::listOfLines
-		|1::l -> findEndOfLine listOfLines (x+1) start l
-		|0::l -> findNextLine ((Types.newline (x-start) x imgWidth img)::listOfLines) 
+		|[]   -> (Types.newline start (x-1) imgWidth img)::listOfLines
+		|0::l -> findEndOfLine listOfLines (x+1) start l
+		|1::l -> findNextLine ((Types.newline start x imgWidth img)::listOfLines) 
 													(x+1) l
 		|_ -> invalid_arg "firstListLines"
 	in findNextLine [] 0 binList

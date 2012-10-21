@@ -104,17 +104,10 @@ let main () =
 			(*Detection de lignes*)
       let display2 = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
 			let lines = Types.list2tab(Extraction.create_lines binarized_image) in
-			let line = lines.(0) in
-			show (line.Types.imgL)  display2;
+			for i = 0 to (Array.length lines) - 1 do
+			show lines.(i).Types.imgL display2;
 			wait_key();
-			show lines.(1).Types.imgL display2;
-			wait_key();
-			show lines.(2).Types.imgL display2;
-			wait_key();
-			show lines.(3).Types.imgL display2;
-			wait_key();
-			show lines.(4).Types.imgL display2;
-			wait_key();
+			done;
 
       (*on quitte*)
       exit 0

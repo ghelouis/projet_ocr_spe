@@ -49,7 +49,7 @@ let setImageL line img =
 		for i = 0 to (line.bRight-line.bLeft-1) do
 			for j = 0 to (line.bInf-line.bSup-1) do
 				let pix_color = 
-								Sdlvideo.get_pixel_color img (line.bLeft+i) (line.bInf+j) in
+								Sdlvideo.get_pixel_color img (line.bLeft+i) (line.bSup+j) in
 					Sdlvideo.put_pixel_color line.imgL i j pix_color
 			done;
 		done;
@@ -85,7 +85,7 @@ let list2tab l =
 	let put_elt tab pos e = tab.(pos) <- e in
 	let rec put_all tab pos = function
 		|[] -> ()
-		|e::l -> put_elt tab pos e;
+		|e::l -> put_elt tab ((Array.length tab)-pos-1) e;
 						 put_all tab (pos+1) l
 		in
 	put_all new_tab 0 l;
