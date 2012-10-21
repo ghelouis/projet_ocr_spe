@@ -64,9 +64,9 @@ let main () =
       image2grey img  new_image;
       show img display;
       
-      wait_key ();
+     (* wait_key ();
       
-      show new_image  display;
+      show new_image  display;*)
       (* on attend une touche*)
       wait_key ();
       let binarized_image = Sdlvideo.create_RGB_surface_format img [] w h in
