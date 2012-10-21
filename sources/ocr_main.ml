@@ -100,6 +100,22 @@ let main () =
       wait_key(); 
 	(*END OF ROTATION*)
 *)
+    (* RLSA *) 
+    let rlsa_hori_img = Sdlvideo.create_RGB_surface_format img [] w h in
+        Segmentation.rlsa_hori binarized_img w h rlsa_hori_img;
+    show rlsa_hori_img display;
+    wait_key();
+
+    let rlsa_verti_img = Sdlvideo.create_RGB_surface_format img [] w h in
+        Segmentation.rlsa_verti binarized_img w h rlsa_verti_img;
+    show rlsa_verti_img display;
+    wait_key();
+
+    let rlsa_fusion_img = Sdlvideo.create_RGB_surface_format img [] w h in
+        Segmentation.fusion w h rlsa_hori_img rlsa_verti_img rlsa_fusion_img;
+    show rlsa_fusion_img display;
+    wait_key();
+    (* END OF RLSA *)
 
 			(*Detection de lignes*)
       let display2 = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
