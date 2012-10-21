@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.6.26)  21 OCT 2012 16:19
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2012.6.26)  21 OCT 2012 17:59
 entering extended mode
 **C:/Users/Louise/Desktop/Projet_OCR/rapport*de*soutenance*fnale.tex
 ("C:/Users/Louise/Desktop/Projet_OCR/rapport de soutenance fnale.tex"
@@ -570,31 +570,88 @@ Overfull \hbox (21.0346pt too wide) in paragraph at lines 146--146
  []
 
 [7 <C:/Users/Louise/Desktop/Projet_OCR/seuil.png>]
-Overfull \hbox (2.60704pt too wide) in paragraph at lines 155--156
+Underfull \hbox (badness 10000) in paragraph at lines 174--176
+
+ []
+
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.178 E
+       n prenant S = 4, la séquence x devient la séquence y: (voir ci-dess...
+
+? 
+
+Underfull \hbox (badness 10000) in paragraph at lines 178--183
+
+ []
+
+[8] <rlsa_fig1.png, id=40, 227.85126pt x 277.035pt>
+File: rlsa_fig1.png Graphic file (type png)
+ <use rlsa_fig1.png>
+Package pdftex.def Info: rlsa_fig1.png used on input line 186.
+(pdftex.def)             Requested size: 91.13889pt x 110.81203pt.
+
+<rlsa_fig2.png, id=41, 227.85126pt x 277.035pt>
+File: rlsa_fig2.png Graphic file (type png)
+ <use rlsa_fig2.png>
+Package pdftex.def Info: rlsa_fig2.png used on input line 190.
+(pdftex.def)             Requested size: 91.13889pt x 110.81203pt.
+
+<rlsa_fig3.png, id=42, 227.85126pt x 277.035pt>
+File: rlsa_fig3.png Graphic file (type png)
+ <use rlsa_fig3.png>
+Package pdftex.def Info: rlsa_fig3.png used on input line 194.
+(pdftex.def)             Requested size: 91.13889pt x 110.81203pt.
+
+
+! LaTeX Error: There's no line here to end.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.197 L
+       'étape finale consiste à appliquer un ET logique aux 2 images obten...
+
+? 
+<rlsa_fig4.png, id=43, 227.85126pt x 277.035pt>
+File: rlsa_fig4.png Graphic file (type png)
+ <use rlsa_fig4.png>
+Package pdftex.def Info: rlsa_fig4.png used on input line 199.
+(pdftex.def)             Requested size: 91.13889pt x 110.81203pt.
+ [9 <C:/Users/Louise/Desktop/Projet_OCR/rlsa_fig1.png> <C:/Users/Louise/Desktop
+/Projet_OCR/rlsa_fig2.png> <C:/Users/Louise/Desktop/Projet_OCR/rlsa_fig3.png>]
+Overfull \hbox (2.60704pt too wide) in paragraph at lines 205--206
 []\OT1/cmr/m/n/12 Pour que des per-sonnes exterieures au pro-jet puissent suiv
 re notre avancee,
  []
 
-[8] ("C:\Users\Louise\Desktop\Projet_OCR\rapport de soutenance fnale.aux") ) 
+[10 <C:/Users/Louise/Desktop/Projet_OCR/rlsa_fig4.png>]
+("C:\Users\Louise\Desktop\Projet_OCR\rapport de soutenance fnale.aux") ) 
 Here is how much of TeX's memory you used:
- 2727 strings out of 494045
- 35003 string characters out of 3145966
+ 2747 strings out of 494045
+ 35339 string characters out of 3145966
  95741 words of memory out of 3000000
- 5988 multiletter control sequences out of 15000+200000
+ 6004 multiletter control sequences out of 15000+200000
  9803 words of font info for 37 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
  27i,5n,24p,963b,198s stack positions out of 5000i,500n,10000p,200000b,50000s
-<C:
-/Program Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/P
-rogram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Pro
-gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Progr
-am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program 
-Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Fil
-es (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (
-x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
-Output written on "rapport de soutenance fnale.pdf" (8 pages, 116869 bytes).
+<C:/Pro
+gram Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmbx12.pfb><C:/Progr
+am Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program
+ Files (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program F
+iles (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi8.pfb><C:/Program File
+s (x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr12.pfb><C:/Program Files (
+x86)/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmr8.pfb><C:/Program Files (x86)
+/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on "rapport de soutenance fnale.pdf" (10 pages, 144162 bytes).
 PDF statistics:
- 63 PDF objects out of 1000 (max. 8388607)
+ 77 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 16 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 36 words of extra memory for PDF output out of 10000 (max. 10000000)
 

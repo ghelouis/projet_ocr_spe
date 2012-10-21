@@ -150,6 +150,56 @@ Cela va nous permettre de recréer virtuellement un histogramme : graphique en d
 \section{Détections}
 \subsection{Détections des lignes}
 \subsection{Détections des zones de texte}
+\subsubsection{Introduction}
+
+
+Pour notre OCR, je me suis penché sur le problème de la segmentation.
+Comment déterminer les zones de textes pour ensuite les traiter plus en profondeur?
+Avant de commencer à coder, une période de recherche et de réflexion a été nécessaire.
+J'ai au final opté pour l'implémentation du RLSA (Run Length Smoothing Algorithm). 
+Mon algorithme intervient après le pré-traitement de l'image par Louise et la rotation éventuelle par Arnaud.
+Je fournis en retour différents blocs contenant chacun du texte. 
+
+\subsubsection{Principe du RLSA}
+
+Le Run Length Smoothing Algorithm fait partie des méthodes de segmentation descendantes. On partage le document en grandes régions, qui sont à leur tour divisées en sous-régions. 
+Le but du RLSA est de mettre en évidence les régions qui ont de nombreuses transitions entre le blanc et le noir (donc le texte).
+\\
+Comme dit en introduction, l'image d'entrée ne doit pas être penchée. Celle-ci doit également être binarisée afin que le traitement soit optimal. 
+On parcours ensuite l'image ligne par ligne en sauvegardant chaque pixel dans un tableau. L'image étant binarisée, un chaque pixel est soit noir soit blanc.
+On les modélise ensuite respectivement par des 0 et par des 1 (il suffit de diviser une des valeur RGB par 255).
+Cette séquence binaire est ensuite transformée selon les règles suivantes:
+\begin{itemize}
+\item les 1 sont changés en 0 si le nombre de 1 adjacents est inférieur ou égal à un seuil prédéterminé S.
+\item les 0 sont inchangés.
+\\
+\end{itemize}
+\\
+En prenant S = 4, la séquence x devient la séquence y: (voir ci-dessous) \\
+x : 1 1 1 0 1 1 1 1 0 1 0 1 1 1 1 0 1 1 1 1 1 1 1 0 0 1 1 1 \\
+y : 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1 1 1 1 1 1 1 0 0 0 0 0 \\
+On fusionne en quelque sorte les régions noires séparées par moins de S pixels.
+\\
+
+Pour bien voir les effets du RLSA, illustrons les prochaines étapes avec un exemple. Prenons en entrée l'image de la figure 1.
+
+\begin{center} \includegraphics[scale=0.4]{rlsa_fig1} \end{center}
+
+En appliquant un RLSA à chaque ligne de pixels, on regroupe les mots de chaque ligne. On peut voir ce résultat sur la figure 2 ci-dessous.
+
+\begin{center} \includegraphics[scale=0.4]{rlsa_fig2} \end{center}
+
+On applique de nouveau l'algorithme sur l'image originale, en parcourant cette fois-ci l'image par colonnes de pixels. Le résultat peut être observé sur la figure 3:
+
+\begin{center} \includegraphics[scale=0.4]{rlsa_fig3} \end{center}
+
+\\
+L'étape finale consiste à appliquer un ET logique aux 2 images obtenus. On obtient alors des blocs de pixels noirs qui délimitent bien les régions contenant le texte (ou les illustrations) de l'image d'entrée. Avec notre exemple on obtient la figure 4:
+
+\begin{center} \includegraphics[scale=0.4]{rlsa_fig4} \end{center}
+
+Par la suite, je retourne les coordonnées des bloc obtenus.
+Mon coéquipier Antoine peut alors analyser ceux-ci en détails et en extraire le texte.
 
 \section{Le site web}
 Pour que des personnes extérieures au projet puissent suivre notre avancée, nous avons développé un site web avec le logiciel wordpress. Il est disponible à http://www.opticalcharacterrecognition.wordpress.com/ . Sont disponibles des présentations de l'équipe "Renaissance du travail totalitaire", le téléchargement de ce présent rapport et le logiciel d'OCR. Nous avons choisi un thème très simple mais toutefois en lien direct avec les caractères -thème principal de l'OCR - : Pilcrow. Celui-ci nous permet de mettre une image de fond et une image d'en-tête personnalisées. Nous avons respectivement choisi l'image d'un parchemin et l'image d'un chameau en calligramme car ils rappellent tout deux l'essence même du projet : l'écriture sous toute ses formes ! De plus, le chameau nous semblait tout à fait adapté aux conditions de réalisation du projet ! 

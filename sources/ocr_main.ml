@@ -78,7 +78,7 @@ let main () =
 			wait_key ();
 
 	(*ROTATION*)
-      let rotated_image = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+     (* let rotated_image = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
       let rotated_image2 = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
 
       Rotation_picture.all_white rotated_image (w,h);
@@ -99,20 +99,21 @@ let main () =
       show rotated_image2 display;
       wait_key(); 
 	(*END OF ROTATION*)
+*)
 
-
-			(*on cree la liste de lignes*)
+			(*Detection de lignes*)
+      let display2 = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
 			let lines = Types.list2tab(Extraction.create_lines binarized_image) in
 			let line = lines.(0) in
-			show (line.Types.imgL)  display;
+			show (line.Types.imgL)  display2;
 			wait_key();
-			show lines.(1).Types.imgL display;
+			show lines.(1).Types.imgL display2;
 			wait_key();
-			show lines.(2).Types.imgL display;
+			show lines.(2).Types.imgL display2;
 			wait_key();
-			show lines.(3).Types.imgL display;
+			show lines.(3).Types.imgL display2;
 			wait_key();
-			show lines.(4).Types.imgL display;
+			show lines.(4).Types.imgL display2;
 			wait_key();
 
       (*on quitte*)
