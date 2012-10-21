@@ -73,12 +73,36 @@ let main () =
       Binarization.binarize_image img binarized_image w h ;
       show binarized_image display;
       wait_key();
-			let cleared_image = Clear_image.clear_image binarized_image in
-			show cleared_image display;
+		  Clear_image.clear_image binarized_image;
+			show binarized_image display;
 			wait_key ();
 
+	(*ROTATION*)
+      let rotated_image = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+      let rotated_image2 = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+
+      Rotation_picture.all_white rotated_image (w,h);
+      Rotation_picture.rot_picture binarized_image rotated_image  (-5.3);
+      
+      wait_key();
+      show rotated_image display;
+      wait_key();
+
+      let angle = Detection_rotation.skew rotated_image in
+      wait_key();
+      print_float((angle));
+
+      Rotation_picture.all_white rotated_image2 (w,h);
+      Rotation_picture.rot_picture rotated_image rotated_image2 (-.angle);
+      wait_key();
+      
+      show rotated_image2 display;
+      wait_key(); 
+	(*END OF ROTATION*)
+
+
 			(*on cree la liste de lignes*)
-			let lines = Types.list2tab(Extraction.create_lines cleared_image) in
+			let lines = Types.list2tab(Extraction.create_lines binarized_image) in
 			let line = lines.(0) in
 			show (line.Types.imgL)  display;
 			wait_key();

@@ -1,4 +1,6 @@
-let division (x,y,z) = (x/9,y/9,z/9);;
+let division_9 (x,y,z) = (x/9,y/9,z/9);; (*normal*)
+let division_6 (x,y,z) = (x/6,y/6,z/6);; (*border*)
+let division_4 (x,y,z) = (x/4,y/4,z/4);; (*corner*)
 let add (x,y,z) (a,b,c) = (a+x, b+y, c+z);;
 
 let left_border img i j = 
@@ -8,7 +10,7 @@ let left_border img i j =
     average := add !average (Sdlvideo.get_pixel_color img n p);
    done;
  done; 
- (division(!average));;
+ (division_6(!average));;
 
 
 let right_border img i j = 
@@ -18,7 +20,7 @@ let right_border img i j =
      average := add !average (Sdlvideo.get_pixel_color img n p);
     done;
  done;
- (division(!average));;
+ (division_6(!average));;
 
 
 
@@ -29,7 +31,7 @@ let down_border img i j=
          average := add !average (Sdlvideo.get_pixel_color img n p);
        done;
    done;
-   (division(!average));;
+   (division_6(!average));;
 
 
 
@@ -40,7 +42,7 @@ let top_border img i j =
           average := add !average (Sdlvideo.get_pixel_color img n p);
         done;
  done;
- (division(!average));;
+ (division_6(!average));;
              
 
 
@@ -54,7 +56,7 @@ let small_clean_image_8 img i j =
          done;
          (*on fait la la moyenne des valeurs des couleurs contenues dans average*)
          (*on met la couleur moyenne obtenue dans le pixel fautif*)
-        (division(!average));;
+        (division_9(!average));;
      
 
 let small_clean_image_top_L img i j =
@@ -67,7 +69,7 @@ let small_clean_image_top_L img i j =
              average := add !average (Sdlvideo.get_pixel_color img n p);
            done;
           done;
-           (division(!average));;
+           (division_4(!average));;
      
 
 let small_clean_image_top_R img i j = 
@@ -78,7 +80,7 @@ let small_clean_image_top_R img i j =
                    average := add !average (Sdlvideo.get_pixel_color img n p);
                 done;
              done;
-              (division(!average));;
+              (division_4(!average));;
      
 let small_clean_image_down_L img i j = 
      (*coin inférieur gauche*)
@@ -88,7 +90,7 @@ let small_clean_image_down_L img i j =
             average := add !average (Sdlvideo.get_pixel_color img n p);
           done;
         done;
-         (division(!average));;
+         (division_4(!average));;
      
 
 let small_clean_image_down_R img i j =
@@ -100,7 +102,7 @@ let small_clean_image_down_R img i j =
            average := add !average (Sdlvideo.get_pixel_color img n p);
         done;
       done;
-       (division(!average));;
+       (division_4(!average));;
      
 
       
@@ -175,7 +177,6 @@ let clear_image img =
                         (small_clean_image_down_R img
                         ((Image_prop.get_width(img))-1)
                         ((Image_prop.get_height(img))-1));
-												img
                         (*coin inférieur droit*)
                   (*if (i=Image_prop.get_width(img)-1) && (j =
                         Image_prop.get_height(img)-1) 
