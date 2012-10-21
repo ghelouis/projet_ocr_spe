@@ -73,6 +73,24 @@ let main () =
       Binarization.binarize_image img binarized_image w h ;
       show binarized_image display;
       wait_key();
+			let cleared_image = Clear_image.clear_image binarized_image in
+			show cleared_image display;
+			wait_key ();
+
+			(*on cree la liste de lignes*)
+			let lines = Types.list2tab(Extraction.create_lines cleared_image) in
+			let line = lines.(0) in
+			show (line.Types.imgL)  display;
+			wait_key();
+			show lines.(1).Types.imgL display;
+			wait_key();
+			show lines.(2).Types.imgL display;
+			wait_key();
+			show lines.(3).Types.imgL display;
+			wait_key();
+			show lines.(4).Types.imgL display;
+			wait_key();
+
       (*on quitte*)
       exit 0
   end

@@ -7,7 +7,7 @@
 let lineDarkness img nb =
   let black = ref 0 
   in for i = 0 to (Sdlvideo.surface_info img).Sdlvideo.w do
-	     if (Sdlvideo.get_pixel_color img nb i = (0,0,0))
+	     if (Sdlvideo.get_pixel_color img i nb = (0,0,0))
     	   then black := !black + 1
      done;
   	 !black
@@ -36,7 +36,7 @@ let moyenne blackList =
 (*prend une image, et retourne une liste de chiffres binaires, chaque chiffre
  * correspond a une ligne, 1 si il y a du noir, 0 si c'est une ligne blanche*)
 
-let binarizeLignes img =
+let binarizeLines img =
   let blackList = shadowX img in
   let rec binRec m = function
     |[]   -> []
@@ -46,6 +46,51 @@ let binarizeLignes img =
   in binRec (moyenne blackList) blackList
 
 
+(*Prend l'image, retourne une liste de lignes grace a la liste binaire*)
+let firstListLines img =
+	let binList = binarizeLines img and
+			imgWidth = Image_prop.get_width img in
+	let rec findNextLine listOfLines x = function
+		|[]   -> listOfLines
+		|0::l -> findNextLine listOfLines (x+1) l
+		|1::l -> findEndOfLine listOfLines (x+1) x l
+		|_ -> invalid_arg "firstListLines"
+	and findEndOfLine listOfLines x start = function
+		|[]   -> (Types.newline (x-1-start) (x-1) imgWidth img)::listOfLines
+		|1::l -> findEndOfLine listOfLines (x+1) start l
+		|0::l -> findNextLine ((Types.newline (x-start) x imgWidth img)::listOfLines) 
+													(x+1) l
+		|_ -> invalid_arg "firstListLines"
+	in findNextLine [] 0 binList
+
+
+(*Calcul les largeurs de lignes et suprimme celles trop petites*)
+let supressLittleLines linesList =
+	let m = Types.moyenneL linesList in
+	let rec sup_rec m = function
+		|[] -> []
+		|li::l -> if ((float)(Types.getH li)) *. 3. < m
+							then sup_rec m l
+							else li::(sup_rec m l)
+	in sup_rec m linesList
+
+
+(*Cree la liste de lignes a partir de l'image de base, et remplis les images 
+correspondant a chaque ligne. Mais les bornes gauche et droite ne sont 
+pas detectee*)
+
+let create_lines img =
+	let lines = supressLittleLines (firstListLines img) in
+	let rec set_all_img = function
+		|[] -> ()
+		|li::l -> Types.setImageL li img;
+						set_all_img l
+	in set_all_img lines;
+	lines
+
+
+(*Detecte les bornes gauches et droites de la ligne*)
+ 
 
 
 
