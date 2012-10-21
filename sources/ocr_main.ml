@@ -78,7 +78,7 @@ let main () =
 			wait_key ();
 
 	(*ROTATION*)
-     (* let rotated_image = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+      let rotated_image = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
       let rotated_image2 = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
 
       Rotation_picture.all_white rotated_image (w,h);
@@ -99,15 +99,15 @@ let main () =
       show rotated_image2 display;
       wait_key(); 
 	(*END OF ROTATION*)
-*)
+
     (* RLSA *) 
     let rlsa_hori_img = Sdlvideo.create_RGB_surface_format img [] w h in
-        Segmentation.rlsa_hori binarized_img w h rlsa_hori_img;
+        Segmentation.rlsa_hori binarized_image w h rlsa_hori_img;
     show rlsa_hori_img display;
     wait_key();
 
     let rlsa_verti_img = Sdlvideo.create_RGB_surface_format img [] w h in
-        Segmentation.rlsa_verti binarized_img w h rlsa_verti_img;
+        Segmentation.rlsa_verti binarized_image w h rlsa_verti_img;
     show rlsa_verti_img display;
     wait_key();
 
