@@ -51,82 +51,82 @@ let main () =
     (*nous voulons un argument*)
     if Array.length(Sys.argv) < 2 then
       failwith "Il manque le nom du fichier";
-      (* initialisation de SDL *)
-      sdl_init ();
-      let img = Sdlloader.load_image Sys.argv.(1) in
-      (* on recupere les dimensions *)
-      let (w,h) = get_dims img in
-      (* on cree la surface d'affichage en doublebuffering *)
-      let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
-      (* on affiche l'image*)
-      show img display ;
-      let new_image=Sdlvideo.create_RGB_surface_format img [] w h in
-      image2grey img  new_image;
-      show img display;
+    (* initialisation de SDL *)
+    sdl_init ();
+    let img = Sdlloader.load_image Sys.argv.(1) in
+    (* on recupere les dimensions *)
+    let (w,h) = get_dims img in
+    (* on cree la surface d'affichage en doublebuffering *)
+    let display = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
+    (* on affiche l'image*)
+    show img display ;
+    let new_image=Sdlvideo.create_RGB_surface_format img [] w h in
+    image2grey img  new_image;
+    show img display;
       
-     (* wait_key ();
+    (* wait_key ();
       
-      show new_image  display;*)
-      (* on attend une touche*)
-      wait_key ();
-      let binarized_image = Sdlvideo.create_RGB_surface_format img [] w h in
-      Binarization.binarize_image img binarized_image w h ;
-      show binarized_image display;
-      wait_key();
-		  Clear_image.clear_image binarized_image;
-			show binarized_image display;
-			wait_key ();
+    show new_image  display;*)
+    (* on attend une touche*)
+    wait_key ();
+    let binarized_image = Sdlvideo.create_RGB_surface_format img [] w h in
+    Binarization.binarize_image img binarized_image w h ;
+    show binarized_image display;
+    wait_key();
+    Clear_image.clear_image binarized_image;
+    show binarized_image display;
+    wait_key ();
 
-	(*ROTATION*)
-      let rotated_image = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
-      let rotated_image2 = Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+    (*ROTATION*)
+    let rotated_image = 
+      Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+    let rotated_image2 = 
+      Sdlvideo.create_RGB_surface_format binarized_image [] w h in
 
-      Rotation_picture.all_white rotated_image (w,h);
-      Rotation_picture.rot_picture binarized_image rotated_image  (-5.3);
+    Rotation_picture.all_white rotated_image (w,h);
+    Rotation_picture.rot_picture binarized_image rotated_image  (-5.3);
       
-      wait_key();
-      show rotated_image display;
-      wait_key();
+    wait_key();
+    show rotated_image display;
+    wait_key();
 
-      let angle = Detection_rotation.skew rotated_image in
-      wait_key();
-      print_float((angle));
+    let angle = Detection_rotation.skew rotated_image in
+    wait_key();
 
-      Rotation_picture.all_white rotated_image2 (w,h);
-      Rotation_picture.rot_picture rotated_image rotated_image2 (-.angle);
-      wait_key();
+    Rotation_picture.all_white rotated_image2 (w,h);
+    Rotation_picture.rot_picture rotated_image rotated_image2 (-.angle);
+    wait_key();
       
-      show rotated_image2 display;
-      wait_key(); 
-	(*END OF ROTATION*)
+    show rotated_image2 display;
+    wait_key(); 
+    (*END OF ROTATION*)
 
     (* RLSA *) 
     let rlsa_hori_img = Sdlvideo.create_RGB_surface_format img [] w h in
-        Segmentation.rlsa_hori binarized_image w h rlsa_hori_img;
+      Segmentation.rlsa_hori rotated_image2  w h rlsa_hori_img;
     show rlsa_hori_img display;
     wait_key();
 
     let rlsa_verti_img = Sdlvideo.create_RGB_surface_format img [] w h in
-        Segmentation.rlsa_verti binarized_image w h rlsa_verti_img;
+      Segmentation.rlsa_verti binarized_image w h rlsa_verti_img;
     show rlsa_verti_img display;
     wait_key();
 
     let rlsa_fusion_img = Sdlvideo.create_RGB_surface_format img [] w h in
-        Segmentation.fusion w h rlsa_hori_img rlsa_verti_img rlsa_fusion_img;
+      Segmentation.fusion w h rlsa_hori_img rlsa_verti_img rlsa_fusion_img;
     show rlsa_fusion_img display;
     wait_key();
     (* END OF RLSA *)
 
-			(*Detection de lignes*)
-      let display2 = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
-			let lines = Types.list2tab(Extraction.create_lines binarized_image) in
-			for i = 0 to (Array.length lines) - 1 do
-			show lines.(i).Types.imgL display2;
-			wait_key();
-			done;
-
-      (*on quitte*)
-      exit 0
+    (*Detection de lignes*)
+    let display2 = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
+    let lines = Types.list2tab(Extraction.create_lines binarized_image) in
+      for i = 0 to (Array.length lines) - 1 do
+        show lines.(i).Types.imgL display2;
+        wait_key();
+      done;
+    (*on quitte*)
+    exit 0
   end
 
 let _ = main ()
