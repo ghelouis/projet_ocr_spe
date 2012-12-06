@@ -3,7 +3,7 @@
 OCAML=ocamlopt
 OCAMLFLAGS = -I +sdl
 OCAMLLD = bigarray.cmxa sdl.cmxa sdlloader.cmxa
-FILES = types.ml image_prop.ml extraction.ml rotation.ml rotation_picture.ml detection_rotation.ml clear_image.ml binarization.ml segmentation.ml ocr_main.ml
+FILES = types.ml image_prop.ml extraction.ml rotation.ml rotation_picture.ml detection_rotation2.ml clear_image.ml binarization.ml segmentation.ml ocr_main.ml
 SORTIE = -o ocr_main
 
 tpsdl:
