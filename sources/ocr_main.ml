@@ -78,23 +78,23 @@ let main () =
     wait_key ();
 
     (*ROTATION*)
-    let rotated_image = 
-      Sdlvideo.create_RGB_surface_format binarized_image [] w h in
+   (* let rotated_image = 
+      Sdlvideo.create_RGB_surface_format binarized_image [] w h in*)
     let rotated_image2 = 
       Sdlvideo.create_RGB_surface_format binarized_image [] w h in
 
-    Rotation_picture.all_white rotated_image (w,h);
+   (* Rotation_picture.all_white rotated_image (w,h);
     Rotation_picture.rot_picture binarized_image rotated_image  (-5.3);
       
     wait_key();
     show rotated_image display;
-    wait_key();
+    wait_key();*)
 
-    let angle = Detection_rotation.skew rotated_image in
+    let angle = Detection_rotation2.skew binarized_image in
     wait_key();
 
     Rotation_picture.all_white rotated_image2 (w,h);
-    Rotation_picture.rot_picture rotated_image rotated_image2 (-.angle);
+    Rotation_picture.rot_picture binarized_image rotated_image2 (-.angle);
     wait_key();
       
     show rotated_image2 display;
