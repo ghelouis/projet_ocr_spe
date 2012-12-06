@@ -25,8 +25,8 @@ let _ = GMain.init ()
 let window = GWindow.window
   ~title:"Ocaml Recognition"
   ~position:`CENTER
-  ~height:500
-  ~width:700 ()
+  ~height:600
+  ~width:900 ()
 
 (* hbox et vbox sont des conteneurs principaux, pour pouvoir insérer 
  * plusieurs widgets. En effet, les fenêtres (GtkWindow) ne peuvent 
@@ -52,9 +52,13 @@ let scroll = GBin.scrolled_window
   ~packing:hbox#add ()
 
 let help_message () = print_endline "Cliquez sur \"Quitter\" pour quitter"
+let get_img () = if Array.length(Sys.argv) < 2 then
+    failwith "image missing"
+  else
+    Sys.argv.(1)
 
 let image = GMisc.image
-  ~file: "ocr-test.jpg"
+  ~file: (get_img ())
   ~packing:scroll#add_with_viewport ()
   
 (* Zone de texte avec des barres de défilement. *)
@@ -93,6 +97,27 @@ let action_button stock event action =
 
 let open_button = action_button `OPEN `OPEN (Aux.load text)
 let save_button = action_button `SAVE `SAVE (Aux.save text)
+
+
+
+(*
+let dialog  =
+  let dlg : [`DELETE_EVENT] = GWindow.file_chooser_dialog ~action:`SAVE () in
+  dlg#add_button_stock `CANCEL `CANCEL;
+  dlg#add_select_button_stock `SAVE `SAVE;
+  dlg
+
+let may_save () =
+  if dialog#run () = `SAVE then Gaux.may print_endline dialog#filename;
+  dialog#misc#hide ()
+
+let save_button =
+  let btn = GButton.button ~stock:`SAVE () in
+  btn#connect#clicked may_save;
+  btn
+*)
+
+
 
 (* GtkColorSelectionDialog - Sélection de couleur. *)
 let color_picker =
@@ -138,6 +163,17 @@ let open_button =
   let _ = btn#connect#selection_changed (may_print btn) in
   btn
 *)
+
+let print_file btn () = Gaux.may print_endline btn#filename
+let set_img btn () = Gaux.may image#set_file btn#filename
+
+(* bouton pour ouvrir une image *)
+let open_img_button = 
+  let btn = GFile.chooser_button
+    ~action:`OPEN
+    ~packing:(bbox#pack ~expand:false) () in
+  let _ = btn#connect#selection_changed ~callback:(set_img btn) in
+  btn
 
 (* Boîte de dialogue "À propos..." *)
 let about_button =
