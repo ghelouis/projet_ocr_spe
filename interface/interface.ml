@@ -216,11 +216,10 @@ let about_button =
   in
     btn
 
-(*
 let toolbar = GButton.toolbar
-  ~orientation:`HORIZONTAL
+  ~orientation:`VERTICAL
   ~style:`ICONS
-  ~packing:(vbox#pack ~expand:false) ()
+  ~packing:(hbox#pack ~expand:false) ()
 
 let days =
   let menu = GMenu.menu () in
@@ -240,8 +239,8 @@ let _ =
     | `M menu -> ignore (GButton.menu_tool_button ~label:"Foo" ~menu ~packing ())
     | _ -> ()
   ) data 
-  *)
 
+(*
 let main () =
   begin
     let _ = window#connect#destroy ~callback:GMain.quit in
@@ -250,3 +249,4 @@ let main () =
   end
 
 let _ = main ()
+*)
