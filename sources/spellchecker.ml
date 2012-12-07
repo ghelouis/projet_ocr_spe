@@ -118,7 +118,7 @@ let rec concat l new_list=
   |a::l1 -> concat l1 ((implode a)::new_list);;  
 
 let corrected word = 
-  let trie = load_trie_from_file "D" in 
+  let trie = load_trie_from_file "Dico_en" in 
   match check trie word with 
   |Correct ->  word;
   |Incorrect l -> List.hd(concat l []);;
