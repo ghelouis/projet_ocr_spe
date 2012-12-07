@@ -25,8 +25,8 @@ let _ = GMain.init ()
 let window = GWindow.window
   ~title:"Ocaml Recognition"
   ~position:`CENTER
-  ~height:600
-  ~width:900 ()
+  ~height:800
+  ~width:1100 ()
 
 (* hbox et vbox sont des conteneurs principaux, pour pouvoir insérer 
  * plusieurs widgets. En effet, les fenêtres (GtkWindow) ne peuvent 
@@ -39,19 +39,43 @@ let vbox = GPack.vbox
   ~border_width:10
   ~packing:window#add ()
 
+let uprint msg () =
+  print_endline msg;
+  flush stdout
+
+(* Menu *)
+let _ =
+  (* container for the menus *)
+  let menu_bar = GMenu.menu_bar
+    ~height:10
+    ~packing:vbox#add ()
+  in
+  (* container for the menu items *)
+  let file_menu = GMenu.menu () in
+  (* menu items *)
+  let item_open = GMenu.menu_item ~label:"Open" ~packing:file_menu#append () in
+  let item_save = GMenu.menu_item ~label:"Save" ~packing:file_menu#append () in
+  let item_quit = GMenu.menu_item ~label:"Quit" ~packing:file_menu#append () in
+  let file_item = GMenu.menu_item ~label:"File" () in
+  let _ = item_open#connect#activate ~callback:(uprint "Open") in
+  let _ = item_save#connect#activate ~callback:(uprint "Save") in
+  let _ = item_quit#connect#activate ~callback:GMain.Main.quit in
+    file_item#set_submenu file_menu;
+    menu_bar#append file_item
+
 let hbox = GPack.hbox 
-  ~spacing:5
-  ~border_width:5
+  ~spacing:10
+  ~border_width:10
   ~packing:vbox#add ()
 
 (* Insertion de barres de défilement. *)
 let scroll = GBin.scrolled_window
-  ~height:200
+  ~height:620
   ~hpolicy:`ALWAYS
   ~vpolicy:`ALWAYS
   ~packing:hbox#add ()
 
-let help_message () = print_endline "Cliquez sur \"Quitter\" pour quitter"
+(* on récupère l'image passée en argument *)
 let get_img () = if Array.length(Sys.argv) < 2 then
     failwith "image missing"
   else
