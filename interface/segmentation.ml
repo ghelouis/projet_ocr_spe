@@ -103,7 +103,7 @@ let smoothing img w h dst =
       done;
     done
 
-let rlsa img w h dst =
+let rlsa img dst w h =
   let rlsa_hori_img = Sdlvideo.create_RGB_surface_format img [] w h in
   let rlsa_verti_img = Sdlvideo.create_RGB_surface_format img [] w h in
   begin

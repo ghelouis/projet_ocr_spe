@@ -43,26 +43,6 @@ let uprint msg () =
   print_endline msg;
   flush stdout
 
-(* Menu *)
-let _ =
-  (* container for the menus *)
-  let menu_bar = GMenu.menu_bar
-    ~height:10
-    ~packing:vbox#add ()
-  in
-  (* container for the menu items *)
-  let file_menu = GMenu.menu () in
-  (* menu items *)
-  let item_open = GMenu.menu_item ~label:"Open" ~packing:file_menu#append () in
-  let item_save = GMenu.menu_item ~label:"Save" ~packing:file_menu#append () in
-  let item_quit = GMenu.menu_item ~label:"Quit" ~packing:file_menu#append () in
-  let file_item = GMenu.menu_item ~label:"File" () in
-  let _ = item_open#connect#activate ~callback:(uprint "Open") in
-  let _ = item_save#connect#activate ~callback:(uprint "Save") in
-  let _ = item_quit#connect#activate ~callback:GMain.Main.quit in
-    file_item#set_submenu file_menu;
-    menu_bar#append file_item
-
 let hbox = GPack.hbox 
   ~spacing:10
   ~border_width:10
@@ -93,15 +73,18 @@ let text =
     ~shadow_type:`ETCHED_IN
     ~packing:hbox#add () in
   let txt = GText.view ~packing:scroll#add () in
+  GtkSpell.attach
+    ~lang:"en_FR" txt;
   txt#misc#modify_font_by_name "Monospace 10";
   txt 
+
 
 (* Un conteneur spécialement conçu pour les boutons. *) 
 let bbox = GPack.button_box `HORIZONTAL
   ~layout:`SPREAD
   ~packing:(vbox#pack ~expand:false) ()
 
-
+(*
 (* GtkFileChooserDialog - Boîte de dialogue d'ouverture et d'enregistrement. *)
 let action_button stock event action =
   let dlg = GWindow.file_chooser_dialog
@@ -121,43 +104,22 @@ let action_button stock event action =
 
 let open_button = action_button `OPEN `OPEN (Aux.load text)
 let save_button = action_button `SAVE `SAVE (Aux.save text)
-
-
-
+*)
+(* met à jour de l'image *)
+let update_img img = image#set_file img
 (*
-let dialog  =
-  let dlg : [`DELETE_EVENT] = GWindow.file_chooser_dialog ~action:`SAVE () in
-  dlg#add_button_stock `CANCEL `CANCEL;
-  dlg#add_select_button_stock `SAVE `SAVE;
-  dlg
+(* met à jour l'image depuis le bouton open_img_button *)
+let set_img btn () = Gaux.may image#set_file btn#filename
 
-let may_save () =
-  if dialog#run () = `SAVE then Gaux.may print_endline dialog#filename;
-  dialog#misc#hide ()
-
-let save_button =
-  let btn = GButton.button ~stock:`SAVE () in
-  btn#connect#clicked may_save;
+(* bouton pour ouvrir une image *)
+let open_img_button = 
+  let btn = GFile.chooser_button
+    ~title:"Choose an image"
+    ~action:`OPEN
+    ~packing:(bbox#pack ~expand:false) () in
+  let _ = btn#connect#selection_changed ~callback:(set_img btn) in
   btn
 *)
-
-
-
-(* GtkColorSelectionDialog - Sélection de couleur. *)
-let color_picker =
-  let dlg = GWindow.color_selection_dialog
-    ~parent:window
-    ~destroy_with_parent:true
-    ~position:`CENTER_ON_PARENT () in
-  let _ = dlg#ok_button#connect#clicked (fun () ->
-    text#misc#modify_base [`NORMAL, `COLOR dlg#colorsel#color])
-  in
-  let btn = GButton.button ~label:"Arrière-plan" ~packing:bbox#add () in
-  let _ = GMisc.image ~stock:`COLOR_PICKER ~packing:btn#set_image () in
-  let _ =  btn#connect#clicked (fun () -> ignore (dlg#run ()); 
-    dlg#misc#hide ()) 
-  in
-  btn
 
 (* GtkFontSelectionDialog - Sélection de la police. *)
 let font_button =
@@ -175,28 +137,20 @@ let font_button =
   in
   btn
 
-(*
-(* pour afficher le nom du fichier ouvert sur le bouton *)
-let may_print btn () = Gaux.may print_endline btn#filename
-
-(* bouton pour ouvrir un fichier *)
-let open_button = 
-  let btn = GFile.chooser_button
-    ~action:`OPEN
-    ~packing:(bbox#pack ~expand:false) () in
-  let _ = btn#connect#selection_changed (may_print btn) in
-  btn
-*)
-
-let print_file btn () = Gaux.may print_endline btn#filename
-let set_img btn () = Gaux.may image#set_file btn#filename
-
-(* bouton pour ouvrir une image *)
-let open_img_button = 
-  let btn = GFile.chooser_button
-    ~action:`OPEN
-    ~packing:(bbox#pack ~expand:false) () in
-  let _ = btn#connect#selection_changed ~callback:(set_img btn) in
+(* GtkColorSelectionDialog - Sélection de couleur de l'arrière-plan. *)
+let color_picker =
+  let dlg = GWindow.color_selection_dialog
+    ~parent:window
+    ~destroy_with_parent:true
+    ~position:`CENTER_ON_PARENT () in
+  let _ = dlg#ok_button#connect#clicked (fun () ->
+    text#misc#modify_base [`NORMAL, `COLOR dlg#colorsel#color])
+  in
+  let btn = GButton.button ~label:"Background color" ~packing:bbox#add () in
+  let _ = GMisc.image ~stock:`COLOR_PICKER ~packing:btn#set_image () in
+  let _ =  btn#connect#clicked (fun () -> ignore (dlg#run ()); 
+    dlg#misc#hide ()) 
+  in
   btn
 
 (* Boîte de dialogue "À propos..." *)
@@ -216,37 +170,10 @@ let about_button =
   in
     btn
 
-let toolbar = GButton.toolbar
-  ~orientation:`VERTICAL
-  ~style:`ICONS
-  ~packing:(hbox#pack ~expand:false) ()
+let quit_button =
+  let btn = GButton.button
+    ~stock:`QUIT
+    ~packing:bbox#add ()
+  in
+  btn#connect#clicked ~callback:(GMain.Main.quit)
 
-let days =
-  let menu = GMenu.menu () in
-  List.iter (fun label -> ignore (GMenu.menu_item ~label ~packing:menu#add ()))
-      ["Lundi"; "Mardi"; "Mercredi"; "Jeudi"; "Vendredi"];
-  menu
-
-let data = [`B `NEW; `B `OPEN; `B `SAVE; `S; `B `CUT; `B `COPY; `B `PASTE; `S;
-`T "Bascule"; `S; `M days]
-
-let _ =
-  let packing = toolbar#insert in
-  List.iter (function
-    | `S -> ignore (GButton.separator_tool_item ~packing ())
-    | `B stock -> ignore (GButton.tool_button ~stock ~packing ())
-    | `T label -> ignore (GButton.toggle_tool_button ~label ~packing ())
-    | `M menu -> ignore (GButton.menu_tool_button ~label:"Foo" ~menu ~packing ())
-    | _ -> ()
-  ) data 
-
-(*
-let main () =
-  begin
-    let _ = window#connect#destroy ~callback:GMain.quit in
-    window#show ();
-    GMain.main ();
-  end
-
-let _ = main ()
-*)
