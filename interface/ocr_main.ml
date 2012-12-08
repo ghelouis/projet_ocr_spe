@@ -46,9 +46,10 @@ let image2grey src dst =
   done
 
   (*main*)
+(*
 let main () =
   begin
-    (* + nous voulons un argument*)
+    (*nous voulons un argument*)
     if Array.length(Sys.argv) < 2 then
       failwith "Il manque le nom du fichier";
     (* initialisation de SDL *)
@@ -76,7 +77,7 @@ let main () =
     Clear_image.clear_image binarized_image;
     show binarized_image display;
     wait_key ();
-(*
+
     (*ROTATION*)
    (* let rotated_image = 
       Sdlvideo.create_RGB_surface_format binarized_image [] w h in*)
@@ -106,29 +107,27 @@ let main () =
       Segmentation.rlsa rotated_image2 w h rlsa_img;
     show rlsa_img display;
     wait_key();
-    (* END OF RLSA *)*)
+    (* END OF RLSA *)
 
     (*Detection de lignes*)
     let display2 = Sdlvideo.set_video_mode w h [`DOUBLEBUF] in
-    let lines = Types.list2tab(Extraction.create_lines binarized_image) in (*
+    let lines = Types.list2tab(Extraction.create_lines binarized_image) in
       for i = 0 to (Array.length lines) - 1 do
         show lines.(i).Types.imgL display2;
         wait_key();
-      done;*)
-
-      (*mise en evidence des caracteres*)
-    let show_char_img = 
-      Sdlvideo.create_RGB_surface_format binarized_image [] w h in
-    Extraction.show_all_char binarized_image lines;
-    show binarized_image display;
-
-    wait_key ();
-
+      done;
     (*on quitte*)
     exit 0
   end
+  *)
+
+let main () =
+  begin
+    let _ = Interface.window#connect#destroy ~callback:GMain.quit in
+    Interface.window#show ();
+    GMain.main ();
+  end
 
 let _ = main ()
-
 
 
