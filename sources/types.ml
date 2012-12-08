@@ -1,11 +1,17 @@
 type tChar = (*Une lettre*)
   {
     mutable letter: char; (*lettre correspondante*)
-    tab: int array array;    
+    tab: int array array;
+    pos_x: int;
+    pos_y: int;
   }
 
   (*Innitialise une nouvelle lettre, a caractere par defaut*)
-let newChar char_array = {letter='a'; tab=char_array} 
+let newChar char_array (posx, posy) = 
+  {letter='a';
+  tab=char_array;
+  pos_x = posx;
+  pos_y = posy; } 
 
 
 type word = (*Un mot = liste de lettres*)
@@ -43,16 +49,47 @@ let moyenneL linesList =
     (length +. 1.) l
   in mrec 0. 0. linesList
 
+
+let rec detect_b_r line img i =
+  let finded = ref 0 in
+  for j = 0 to (line.bInf-line.bSup-1) do
+    if Sdlvideo.get_pixel_color img (line.bRight-i) (line.bSup+j) = (0, 0, 0)
+    then finded := (!finded) + 1
+  done;
+  if ((!finded) > 2)
+  then
+    line.bRight <- line.bRight-i+1
+  else
+    detect_b_r line img (i+1)
+
+
+let rec detect_b line img i =
+  let finded = ref 0 in
+  for j = 0 to (line.bInf-line.bSup-1) do
+    if Sdlvideo.get_pixel_color img i (line.bSup+j) = (0, 0, 0)
+    then finded := (!finded) + 1
+  done;
+  if ((!finded) > 2)
+  then
+    begin
+      line.bLeft <- i;
+      detect_b_r line img 0
+    end
+  else
+    detect_b line img (i+1)
+
+
 let setImageL line img =
+  detect_b line img 0;
   line.imgL <- Sdlvideo.create_RGB_surface_format 
-  img [] (line.bRight-line.bLeft) (line.bInf-line.bSup);
+      img [] (line.bRight-line.bLeft) (line.bInf-line.bSup);
   for i = 0 to (line.bRight-line.bLeft-1) do
     for j = 0 to (line.bInf-line.bSup-1) do
       let pix_color = 
         Sdlvideo.get_pixel_color img (line.bLeft+i) (line.bSup+j) in
       Sdlvideo.put_pixel_color line.imgL i j pix_color
     done;
-    done;
+  done;
 
 
 
