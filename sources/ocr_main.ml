@@ -116,6 +116,11 @@ let main () =
         wait_key();
       done;
     (*on quitte*)
+    
+      (*Background_color_generation.*)
+
+
+
     exit 0
   end
 
