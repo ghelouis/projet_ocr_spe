@@ -25,8 +25,17 @@ let moyenne blackList =
   let rec mrec m length = function
     |[]    -> invalid_arg "Liste de noir vide"
     |e::[] -> (m *. length +.  (float)e) /. (length +. 1.)
-    |e::l  -> mrec ((m *. length +. (float)e)/.(length +. 1.)) (length +. 1.) l
+    |e::l  -> 
+        if (e != 0)
+        then mrec ((m *. length +. (float)e)/.(length +. 1.)) (length +. 1.) l
+        else mrec m length l
   in mrec 0. 0. blackList
+
+let invBin listBin =
+  let rec inv l2 = function
+    |[] -> l2
+    |e::l1 -> inv (e::l2) l1
+  in inv [] listBin
 
 
   (*prend une image, et retourne une liste de chiffres binaires, chaque chiffre
@@ -36,7 +45,7 @@ let binarize_col img =
   let blackList = shadowY img in
   let rec binRec m = function
     |[]   -> []
-    |nb::l -> if ((float)nb > m /. 4.)
+    |nb::l -> if ((float)nb > m /. 3.)
               then 0::(binRec m l)
               else 1::(binRec m l)
   in binRec (moyenne blackList) blackList
@@ -61,7 +70,7 @@ let create_char line start_x end_x =
   (*Prend l'image de la ligne, retourne une liste de caracteres 
    * grace a la liste binaire*)
 let firstList_char line =
-  let binList = binarize_col line.Types.imgL in
+  let binList = invBin(binarize_col line.Types.imgL) in
   let rec findNextChar listOfChar x = function
     |[]   -> listOfChar
     |1::l -> findNextChar listOfChar (x+1) l
@@ -115,12 +124,6 @@ let binarizeLines img =
               then 0::(binRec m l)
               else 1::(binRec m l)
   in binRec (moyenne blackList) blackList
-
-let invBin listBin =
-  let rec inv l2 = function
-    |[] -> l2
-    |e::l1 -> inv (e::l2) l1
-  in inv [] listBin
 
   (*Prend une liste de chiffres binaires et lui enleve les *)
 let rec suppLostWhites = function
