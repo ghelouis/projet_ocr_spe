@@ -25,8 +25,17 @@ let moyenne blackList =
   let rec mrec m length = function
     |[]    -> invalid_arg "Liste de noir vide"
     |e::[] -> (m *. length +.  (float)e) /. (length +. 1.)
-    |e::l  -> mrec ((m *. length +. (float)e)/.(length +. 1.)) (length +. 1.) l
+    |e::l  -> 
+        if (e != 0)
+        then mrec ((m *. length +. (float)e)/.(length +. 1.)) (length +. 1.) l
+        else mrec m length l
   in mrec 0. 0. blackList
+
+let invBin listBin =
+  let rec inv l2 = function
+    |[] -> l2
+    |e::l1 -> inv (e::l2) l1
+  in inv [] listBin
 
 
   (*prend une image, et retourne une liste de chiffres binaires, chaque chiffre
@@ -36,7 +45,7 @@ let binarize_col img =
   let blackList = shadowY img in
   let rec binRec m = function
     |[]   -> []
-    |nb::l -> if ((float)nb > m /. 5.)
+    |nb::l -> if ((float)nb > m /. 3.)
               then 0::(binRec m l)
               else 1::(binRec m l)
   in binRec (moyenne blackList) blackList
@@ -44,25 +53,33 @@ let binarize_col img =
 
 (*Cree un pixel*)
 
-let create_char img start_x end_x =
-  let ma _ = Array.init (Sdlvideo.surface_info img).Sdlvideo.h (fun _ -> 0) in
-  let tab = Array.init (start_x - end_x) ma in
-  Types.newChar tab
+let create_char line start_x end_x =
+  let img = line.Types.imgL in
+  let ma _ = Array.init (Sdlvideo.surface_info img).Sdlvideo.h (fun _ -> 1) in
+  let tab = Array.init (end_x - start_x) ma in
+  let is_black x y = (0,0,0) = Sdlvideo.get_pixel_color img x y in
+  for i = 0 to (Array.length tab) - 1 do
+    for j = 0 to (Array.length tab.(0)) - 1 do
+      if is_black i j then
+        tab.(i).(j) <- 0;
+    done;
+  done;
+  Types.newChar tab (line.Types.bLeft + start_x, line.Types.bSup)
 
 
   (*Prend l'image de la ligne, retourne une liste de caracteres 
    * grace a la liste binaire*)
-let firstList_char img =
-  let binList = binarize_col img in
+let firstList_char line =
+  let binList = invBin(binarize_col line.Types.imgL) in
   let rec findNextChar listOfChar x = function
     |[]   -> listOfChar
     |1::l -> findNextChar listOfChar (x+1) l
     |0::l -> findEndOfChar listOfChar (x+1) x l
     |_ -> invalid_arg "firstListChar"
   and findEndOfChar listOfChar x start = function
-    |[]   -> (create_char img start x)::listOfChar
+    |[]   -> (create_char line start x)::listOfChar
     |0::l -> findEndOfChar listOfChar (x+1) start l
-    |1::l -> findNextChar ((create_char img start x)::listOfChar) 
+    |1::l -> findNextChar ((create_char line start x)::listOfChar) 
     (x+1) l
     |_ -> invalid_arg "firstListChar"
   in findNextChar [] 0 binList
@@ -107,12 +124,6 @@ let binarizeLines img =
               then 0::(binRec m l)
               else 1::(binRec m l)
   in binRec (moyenne blackList) blackList
-
-let invBin listBin =
-  let rec inv l2 = function
-    |[] -> l2
-    |e::l1 -> inv (e::l2) l1
-  in inv [] listBin
 
   (*Prend une liste de chiffres binaires et lui enleve les *)
 let rec suppLostWhites = function
@@ -161,14 +172,34 @@ let create_lines img =
   let rec set_all_img = function
     |[] -> ()
     |li::l -> Types.setImageL li img;
-              li.Types.letters <- firstList_char li.Types.imgL;
+              li.Types.letters <- firstList_char li;
               set_all_img l
   in set_all_img lines;
   lines
 
 
 
-
+let show_all_char img array_l =
+  let rec make_frame img = function
+    |[] -> ()
+    |c::l -> 
+      for x = 0 to (Array.length c.Types.tab) - 1 do
+        Sdlvideo.put_pixel_color img (c.Types.pos_x + x) 
+            c.Types.pos_y (255, 0, 255);
+        Sdlvideo.put_pixel_color img (c.Types.pos_x + x)
+            (c.Types.pos_y + Array.length c.Types.tab.(0)) (255, 0, 255)
+      done;
+      for y = 0 to (Array.length c.Types.tab.(0)) - 1 do
+        Sdlvideo.put_pixel_color img c.Types.pos_x
+            (c.Types.pos_y + y) (255, 0, 255);
+        Sdlvideo.put_pixel_color img (c.Types.pos_x + Array.length c.Types.tab)
+            (c.Types.pos_y + y) (255, 0, 255)
+      done;
+      make_frame img l in
+  for i = 0 to (Array.length array_l) - 1 do
+    make_frame img array_l.(i).Types.letters;
+  done;
+  (*img*)
 
 
 
