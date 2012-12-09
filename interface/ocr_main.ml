@@ -129,9 +129,6 @@ let _ =
       ~packing () 
       in btn#connect#clicked 
       ~callback:(apply_all current_img))
-    | `OPEN -> ignore (let btn = GButton.tool_button ~stock:`OPEN ~packing () in
-      btn#connect#clicked 
-      ~callback:(Interface.load "output.txt"))
     | `SAVE -> ignore (let btn = GButton.tool_button ~stock:`SAVE ~packing () in
       btn#connect#clicked 
       ~callback:(Interface.save "output.txt"))
