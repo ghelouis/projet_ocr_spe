@@ -51,22 +51,33 @@ let text =
   txt 
 
 (* fonction pour charger un fichier texte dans la zone de texte *)
-let load file () =
+(*let load file () =
   let ich = open_in file in
   let len = in_channel_length ich in
   let buf = Buffer.create len in
     Buffer.add_channel buf ich len;
     close_in ich;
     text#buffer#set_text (Buffer.contents buf)
+*)
 
 let set_text s () =
   text#buffer#set_text s
 
 (* pour sauvegarder le texte dans un fichier *)
-let save file () = 
+let save_aux file = 
   let och = open_out file in
   output_string och (text#buffer#get_text ());
   close_out och
+
+(* popup qui demande à l'utilisateur le nom du fichier *)
+let save file () =
+  let title = "save as" in
+  let uri =
+    GToolbox.input_string ~title ~text:"extracted_text.txt" ~ok:"OK" "" in
+  match uri with
+  | None -> ()
+  | Some uri -> save_aux uri
+
 
 (* pour sauvegarder le texte dans un fichier *)(*
 let save file () = 

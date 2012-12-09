@@ -1,1 +1,5 @@
-A remplir !
+- OCaml Recognition -
+
+Pour compiler ce projet, lancer la commande make dans le dossier sources.
+Puis lancer le programme avec ./ocr_main [image].
+Un argument indiquant le chemin d'une image est attendu.
