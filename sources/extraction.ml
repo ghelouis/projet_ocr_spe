@@ -38,14 +38,14 @@ let invBin listBin =
   in inv [] listBin
 
 
-  (*prend une image, et retourne une liste de chiffres binaires, chaque chiffre
-   * correspond a une colonne, 1 si il y a du noir, 0 si c'est une ligne blanche*)
+(*prend une image, et retourne une liste de chiffres binaires, chaque chiffre
+ * correspond a une colonne, 1 si il y a du noir, 0 si c'est une ligne blanche*)
 
 let binarize_col img =
   let blackList = shadowY img in
   let rec binRec m = function
     |[]   -> []
-    |nb::l -> if ((float)nb > m /. 3.)
+    |nb::l -> if ((float)nb >= m /. 2.5)
               then 0::(binRec m l)
               else 1::(binRec m l)
   in binRec (moyenne blackList) blackList
@@ -67,10 +67,16 @@ let create_char line start_x end_x =
   Types.newChar tab (line.Types.bLeft + start_x, line.Types.bSup)
 
 
+let rec suppLost = function
+  |[] -> []
+  |1::0::1::l -> 1::1::(suppLost (1::l))
+  |e::l -> e::(suppLost l)
   (*Prend l'image de la ligne, retourne une liste de caracteres 
    * grace a la liste binaire*)
+
+
 let firstList_char line =
-  let binList = invBin(binarize_col line.Types.imgL) in
+  let binList = (*suppLost*)(invBin(binarize_col line.Types.imgL)) in
   let rec findNextChar listOfChar x = function
     |[]   -> listOfChar
     |1::l -> findNextChar listOfChar (x+1) l
