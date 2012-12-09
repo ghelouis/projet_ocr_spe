@@ -44,7 +44,7 @@ let image2grey src dst =
        Sdlvideo.put_pixel_color dst i j (a,b,c)
     done;
   done
-(*
+
 let print_help () =
   let warning = "usage : "^Sys.argv.(0)^" [-p picture]\n"
   and spec = " -p : set a picture\n " 
@@ -52,12 +52,12 @@ let print_help () =
   print_string warning;
   print_string spec;
   print_string help;;
-*)
+
 
   (*main*)
 let main () =
   begin
-   (* (* + nous voulons un argument*)
+    (* + nous voulons un argument*)
     let prog = ref true in        
     if (Array.length(Sys.argv) < 2) then
       begin      
@@ -73,7 +73,7 @@ let main () =
         end
     done;
 
-  if(!prog = true) then*) 
+  if(!prog = true) then 
   begin        
         
     (* initialisation de SDL *)
@@ -149,11 +149,10 @@ let main () =
 
     wait_key ();
     
-    (*Apprentissage*)
+   (* (*Apprentissage*)
     let nw = new Neuron.network in
     nw#learn () ;
-
-
+*)
     (*on quitte*)
     
       (*Background_color_generation.*)

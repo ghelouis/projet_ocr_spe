@@ -105,19 +105,18 @@ class network =
         neurons.(c)#learn imgs
       done
   end
-
+  
   (*to_channel*)
-let serialization  my_object = 
+let serialization my_object = 
   let out_channel = open_out_bin "my_binary" in
   Marshal.to_channel out_channel my_object [Marshal.Closures];
   close_out out_channel;;
 
 (*from_channel*) 
-let deserialization =
+let deserialization () =
   let in_channel = open_in_bin "my_binary" in
   let data = Marshal.from_channel in_channel in 
   data;;
-
 
 
 (*let marshall2 my_binobject = Marshall.from_string "my_binobject" 0 ;;*)
