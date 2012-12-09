@@ -1,23 +1,5 @@
 (* interface.ml - une interface graphique avec lablgtk *)
 
-(* module pour faciliter le chargement et la sauvegarde des fichiers *)
-module Aux =
-  struct
-    let load (text : GText.view) file =
-      let ich = open_in file in
-      let len = in_channel_length ich in
-      let buf = Buffer.create len in
-      Buffer.add_channel buf ich len;
-      close_in ich;
-      text#buffer#set_text (Buffer.contents buf)
-
-    let save (text : GText.view)
-    file = let och = open_out file in
-    output_string och (text#buffer#get_text ());
-    close_out och
-  end
-
-
 (* initialisation de GTK *)
 let _ = GMain.init ()
 
@@ -54,16 +36,6 @@ let scroll = GBin.scrolled_window
   ~hpolicy:`ALWAYS
   ~vpolicy:`ALWAYS
   ~packing:hbox#add ()
-
-(* on récupère l'image passée en argument *)
-let get_img () = if Array.length(Sys.argv) < 2 then
-    failwith "image missing"
-  else
-    Sys.argv.(1)
-
-let image = GMisc.image
-  ~file: (get_img ())
-  ~packing:scroll#add_with_viewport ()
   
 (* Zone de texte avec des barres de défilement. *)
 let text =
@@ -78,6 +50,39 @@ let text =
   txt#misc#modify_font_by_name "Monospace 10";
   txt 
 
+(* fonction pour charger un fichier texte dans la zone de texte *)
+let load file () =
+  let ich = open_in file in
+  let len = in_channel_length ich in
+  let buf = Buffer.create len in
+    Buffer.add_channel buf ich len;
+    close_in ich;
+    text#buffer#set_text (Buffer.contents buf)
+
+let set_text s () =
+  text#buffer#set_text s
+
+(* pour sauvegarder le texte dans un fichier *)
+let save file () = 
+  let och = open_out file in
+  output_string och (text#buffer#get_text ());
+  close_out och
+
+(* pour sauvegarder le texte dans un fichier *)(*
+let save file () = 
+  let dlg = GWindow.file_chooser_dialog
+  ~action: `OPEN
+  ~parent:window
+  ~position:`CENTER_ON_PARENT
+  ~destroy_with_parent:true () in
+  dlg#add_button_stock `CANCEL `CANCEL;
+  dlg#add_select_button_stock `SAVE `SAVE;
+  if dlg#run () = `OPEN then
+    Gaux.may uprint dlg#filename; dlg#misc#hide ()*)
+  (*
+  let och = open_out file in
+  output_string och (text#buffer#get_text ());
+  close_out och *)
 
 (* Un conteneur spécialement conçu pour les boutons. *) 
 let bbox = GPack.button_box `HORIZONTAL
@@ -105,11 +110,31 @@ let action_button stock event action =
 let open_button = action_button `OPEN `OPEN (Aux.load text)
 let save_button = action_button `SAVE `SAVE (Aux.save text)
 *)
-(* met à jour de l'image *)
-let update_img img = image#set_file img
-(*
+
+(* on récupère l'image passée en argument *)
+let get_img () = if Array.length(Sys.argv) < 2 then
+    failwith "image missing"
+  else
+    Sys.argv.(1)
+
+let current_img = ref (get_img ())
+
+(* l'image affichée *)
+let image = GMisc.image
+  ~file: (get_img ())
+  ~packing:scroll#add_with_viewport ()
+
+(* met à jour l'image affichée *)
+let update_img img = 
+  image#set_file img;
+  current_img := img
+
 (* met à jour l'image depuis le bouton open_img_button *)
-let set_img btn () = Gaux.may image#set_file btn#filename
+let set_img btn () = 
+  Gaux.may image#set_file btn#filename;
+  match btn#filename with
+  | None -> ()
+  | Some s -> current_img := s
 
 (* bouton pour ouvrir une image *)
 let open_img_button = 
@@ -119,7 +144,6 @@ let open_img_button =
     ~packing:(bbox#pack ~expand:false) () in
   let _ = btn#connect#selection_changed ~callback:(set_img btn) in
   btn
-*)
 
 (* GtkFontSelectionDialog - Sélection de la police. *)
 let font_button =

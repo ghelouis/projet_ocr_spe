@@ -91,11 +91,11 @@ let toolbar = GButton.toolbar
   ~style:`ICONS
   ~packing:(Interface.vbox#pack ~expand:false) ()
 
-let data = [`G; `B; `R; `SEG; `S; `A]
+let data = [`G; `B; `R; `GT; `S; `A; `S; `OPEN; `SAVE]
 
 (* association des fonctions aux boutons *)
 let _ =
-  let current_img = ref (Interface.get_img ()) in
+  let current_img = Interface.current_img(*ref (Interface.get_img ())*) in
   let packing = toolbar#insert in
   List.iter (function
     | `S -> ignore (GButton.separator_tool_item ~packing ())
@@ -114,16 +114,27 @@ let _ =
       ~packing () 
       in btn#connect#clicked 
       ~callback:(apply_rot current_img "rotated.bmp"))
-    | `SEG -> ignore (let btn = GButton.tool_button 
+    (*| `SEG -> ignore (let btn = GButton.tool_button 
       ~label:"RLSA" 
       ~packing () 
       in btn#connect#clicked 
-      ~callback:(apply Segmentation.rlsa current_img "rlsa.bmp"))
+      ~callback:(apply Segmentation.rlsa current_img "rlsa.bmp"))*)
+    | `GT -> ignore (let btn = GButton.tool_button 
+      ~label:"Get text" 
+      ~packing () 
+      in btn#connect#clicked 
+      ~callback:(Interface.set_text "This is the text recognized."))
     | `A -> ignore (let btn = GButton.tool_button 
       ~label:"Apply all" 
       ~packing () 
       in btn#connect#clicked 
       ~callback:(apply_all current_img))
+    | `OPEN -> ignore (let btn = GButton.tool_button ~stock:`OPEN ~packing () in
+      btn#connect#clicked 
+      ~callback:(Interface.load "output.txt"))
+    | `SAVE -> ignore (let btn = GButton.tool_button ~stock:`SAVE ~packing () in
+      btn#connect#clicked 
+      ~callback:(Interface.save "output.txt"))
     | _ -> ()
   ) data 
 
