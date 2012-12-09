@@ -94,7 +94,7 @@ class network =
       done;
       !finded_c
 
-    method learn =
+    method learn () =
       for c = 0 to 90 do
         let imgs = Array.init 26 (fun _ -> 
             Sdlloader.load_image "../apprentissage/z-Verdana.ttf.bmp") in
@@ -106,11 +106,11 @@ class network =
       done
   end
 
-(*to_channel*)
+  (*to_channel*)
 let serialization  my_object = 
-let out_channel = open_out_bin "my_binary" in
-Marshal.to_channel out_channel my_object [Marshal.Closures];
-close_out out_channel;;
+  let out_channel = open_out_bin "my_binary" in
+  Marshal.to_channel out_channel my_object [Marshal.Closures];
+  close_out out_channel;;
 
 (*from_channel*) 
 let deserialization =
