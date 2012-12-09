@@ -45,12 +45,39 @@ let image2grey src dst =
     done;
   done
 
+let print_help () =
+  let warning = "usage : "^Sys.argv.(0)^" [-p picture]\n"
+  and spec = " -p : set a picture\n " 
+  and help = "-help : Help\n" in
+  print_string warning;
+  print_string spec;
+  print_string help;;
+	
+
   (*main*)
 let main () =
   begin
     (* + nous voulons un argument*)
-    if Array.length(Sys.argv) < 2 then
-      failwith "Il manque le nom du fichier";
+    let prog = ref true in        
+    if (Array.length(Sys.argv) < 2) then
+      begin      
+         print_help();
+         prog := false;
+      end   
+    else    
+    for i = 0 to Array.length Sys.argv -1 do 
+      begin  
+        if(Sys.argv.(i) = "-help")||(Sys.argv.(i)="--help")then
+             begin  
+                print_help(); 
+                prog := false;
+             end
+      end       
+  done;
+
+  if(!prog = true) then 
+  begin        
+        
     (* initialisation de SDL *)
     sdl_init ();
     let img = Sdlloader.load_image Sys.argv.(1) in
@@ -127,11 +154,10 @@ let main () =
     (*on quitte*)
     
       (*Background_color_generation.*)
-
-
-
     exit 0
   end
+end
+
 
 let _ = main ()
 

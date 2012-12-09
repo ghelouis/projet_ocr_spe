@@ -1,7 +1,7 @@
 (*binarization*)
 
 let binarize_pixel(r,g,b) = match r with
-  |r when r > 128 -> (255,255,255)
+  |r when r > 150 -> (255,255,255)
   |_ -> (0,0,0) ;;
 
 

@@ -51,7 +51,7 @@ let moyenneL linesList =
 
 
 let rec detect_b_r line img i =
-  let finded = ref 0 in
+  let finded = ref 1 in
   for j = 0 to (line.bInf-line.bSup-1) do
     if Sdlvideo.get_pixel_color img (line.bRight-i) (line.bSup+j) = (0, 0, 0)
     then finded := (!finded) + 1
@@ -64,7 +64,7 @@ let rec detect_b_r line img i =
 
 
 let rec detect_b line img i =
-  let finded = ref 0 in
+  let finded = ref 1 in
   for j = 0 to (line.bInf-line.bSup-1) do
     if Sdlvideo.get_pixel_color img i (line.bSup+j) = (0, 0, 0)
     then finded := (!finded) + 1
