@@ -21,10 +21,6 @@ let vbox = GPack.vbox
   ~border_width:10
   ~packing:window#add ()
 
-let uprint msg () =
-  print_endline msg;
-  flush stdout
-
 let hbox = GPack.hbox 
   ~spacing:10
   ~border_width:10
@@ -78,49 +74,10 @@ let save file () =
   | None -> ()
   | Some uri -> save_aux uri
 
-
-(* pour sauvegarder le texte dans un fichier *)(*
-let save file () = 
-  let dlg = GWindow.file_chooser_dialog
-  ~action: `OPEN
-  ~parent:window
-  ~position:`CENTER_ON_PARENT
-  ~destroy_with_parent:true () in
-  dlg#add_button_stock `CANCEL `CANCEL;
-  dlg#add_select_button_stock `SAVE `SAVE;
-  if dlg#run () = `OPEN then
-    Gaux.may uprint dlg#filename; dlg#misc#hide ()*)
-  (*
-  let och = open_out file in
-  output_string och (text#buffer#get_text ());
-  close_out och *)
-
 (* Un conteneur spécialement conçu pour les boutons. *) 
 let bbox = GPack.button_box `HORIZONTAL
   ~layout:`SPREAD
   ~packing:(vbox#pack ~expand:false) ()
-
-(*
-(* GtkFileChooserDialog - Boîte de dialogue d'ouverture et d'enregistrement. *)
-let action_button stock event action =
-  let dlg = GWindow.file_chooser_dialog
-    ~action:`OPEN
-    ~parent:window
-    ~position:`CENTER_ON_PARENT
-    ~destroy_with_parent:true () in
-  dlg#add_button_stock `CANCEL `CANCEL;
-  dlg#add_select_button_stock stock event;
-  let btn = GButton.button ~stock ~packing:bbox#add () in
-  let _ = GMisc.image ~stock ~packing:btn#set_image () in
-  let _ = btn#connect#clicked (fun () ->
-    if dlg#run () = `OPEN then Gaux.may action dlg#filename;
-    dlg#misc#hide ())
-  in
-  btn
-
-let open_button = action_button `OPEN `OPEN (Aux.load text)
-let save_button = action_button `SAVE `SAVE (Aux.save text)
-*)
 
 (* on récupère l'image passée en argument *)
 let get_img () = if Array.length(Sys.argv) < 2 then

@@ -66,6 +66,14 @@ let apply_rot img_ref s () =
   img_ref := s;
   Interface.update_img s
 
+(* enlève le bruit *)
+let apply_clear_img img_ref s () =
+  let img = Sdlloader.load_image !img_ref in
+  Clear_image.clear_image img;
+  Sdlvideo.save_BMP img s;
+  img_ref := s;
+  Interface.update_img s
+
 (* applique toutes les fonctions *)
 let apply_all img_ref () =
   begin
@@ -91,7 +99,7 @@ let toolbar = GButton.toolbar
   ~style:`ICONS
   ~packing:(Interface.vbox#pack ~expand:false) ()
 
-let data = [`G; `B; `R; `GT; `S; `A; `S; `OPEN; `SAVE]
+let data = [`G; `B; `R; `RM; `GT; `S; `A; `S; `OPEN; `SAVE]
 
 (* association des fonctions aux boutons *)
 let _ =
@@ -109,6 +117,11 @@ let _ =
       ~packing () 
       in btn#connect#clicked 
       ~callback:(apply Binarization.binarize_image current_img "binarized.bmp"))
+    | `RM -> ignore (let btn = GButton.tool_button 
+      ~label:"Remove noise" 
+      ~packing () 
+      in btn#connect#clicked 
+      ~callback:(apply_clear_img current_img "cleared.bmp"))
     | `R -> ignore (let btn = GButton.tool_button 
       ~label:"Rotate" 
       ~packing () 
