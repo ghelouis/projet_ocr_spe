@@ -31,9 +31,19 @@ class neuron c =
     val mutable stats_m = [||]
   
     initializer
-      stats_m <- Array.make_matrix 30 30 50
+      stats_m <- Array.make_matrix 30 30 0
 
-    method get_name = name
+    method get_name () = name
+
+    method print_matrice () =
+      for i = 0 to 29 do
+        for j = 0 to 29 do
+          print_int stats_m.(i).(j)
+        done;
+        print_string "\n";
+      done;
+      print_string "\n";
+
 
     method compare mat =
       let izgoud = ref 0 in
@@ -49,17 +59,16 @@ class neuron c =
       !izgoud
 
     method learn imgs =
-      let stats_m = Array.make_matrix 30 30 0 in
       let l = Array.length imgs in
-      let bin_imgs = Array.init l (fun i -> img2matbool imgs.(i-1)) in
+      let bin_imgs = Array.init l (fun i -> img2matbool imgs.(i)) in
       for i = 0 to 29 do
         for j = 0 to 29 do
-          for k = 0 to l do
+          for k = 0 to l-1 do
             stats_m.(i).(j) <- stats_m.(i).(j) + bin_imgs.(k).(i).(j)
           done;
-          stats_m.(i).(j) <- 100 * stats_m.(i).(j) / l
+          stats_m.(i).(j) <- 100 * stats_m.(i).(j) / l;
         done
-      done
+      done;
 
   end
 
@@ -71,9 +80,10 @@ class network =
     val mutable neurons = [||]
 
     initializer
-      neurons <- Array.init 91 (fun i -> new neuron (char_of_int (i+21)))
+      neurons <- Array.init 75 (fun i -> new neuron (Char.chr(i+48)))
 
     method find_char c =
+      (*print_char 'x';*)
       let mat_c = Array.make_matrix 30 30 0 in
       for i = 0 to 29 do
         for j = 0 to 29 do
@@ -84,25 +94,56 @@ class network =
           mat_c.(i).(j) <- c.Types.tab.(x).(y)
         done
       done;
-      let finded_c = ref ' ' and best_r = ref (-10000) in
-      for i = 0 to 221 do
+      let finded_c = ref ' ' and best_r = ref (10000) in
+      for i = 0 to 74 do
         let result = neurons.(i)#compare mat_c in
-        if (result > !best_r)
+        if (result < !best_r)
         then
-          finded_c := neurons.(i)#get_name;
-          best_r := result
+          begin
+            finded_c := (neurons.(i)#get_name ());
+            best_r := result
+          end;
       done;
       !finded_c
 
+
+    method print_all_mat () =
+      for i = 0 to 5 do
+        neurons.(i)#print_matrice ();
+      done
+
+
     method learn () =
-      for c = 0 to 90 do
-        let imgs = Array.init 26 (fun _ -> 
+      for c = 0 to 74 do
+        let imgs = Array.init (Array.length file_names) (fun _ -> 
             Sdlloader.load_image "../apprentissage/z-Verdana.ttf.bmp") in
-        for i = 0 to 25 do 
-          imgs.(i) <- Sdlloader.load_image  
-              ("../apprentissage/"^(string_of_int c)^(file_names.(i)))
+        for i = 0 to (Array.length file_names)-1 do
+          let carac = (Char.escaped(Char.chr(33+c))) in
+          if (carac = "\\'")
+          then
+            begin
+             imgs.(i) <- Sdlloader.load_image ("../apprentissage/"^
+              "`"^(file_names.(i)))
+            end
+          else if (carac = ".")
+          then
+            begin
+              imgs.(i) <- Sdlloader.load_image ("../apprentissage/"^
+              ","^(file_names.(i)))
+            end
+          else if (carac = "\\\\")
+          then
+            begin
+              imgs.(i) <- Sdlloader.load_image ("../apprentissage/"^
+              "\\"^(file_names.(i)))
+            end
+          else
+            begin
+            imgs.(i) <- Sdlloader.load_image ("../apprentissage/"^
+              carac^(file_names.(i)))
+            end
         done;
-        neurons.(c)#learn imgs
+        neurons.(c)#learn imgs;
       done
   end
   

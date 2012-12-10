@@ -74,8 +74,7 @@ let main () =
     done;
 
   if(!prog = true) then 
-  begin        
-        
+  begin
     (* initialisation de SDL *)
     sdl_init ();
     let img = Sdlloader.load_image Sys.argv.(1) in
@@ -88,7 +87,10 @@ let main () =
     let new_image=Sdlvideo.create_RGB_surface_format img [] w h in
     image2grey img  new_image;
     show img display;
-      
+     
+    
+
+     
     (* wait_key ();
       
     show new_image  display;*)
@@ -147,12 +149,22 @@ let main () =
     Extraction.show_all_char binarized_image lines;
     show binarized_image display;
 
-    wait_key ();
-    
-   (* (*Apprentissage*)
+    (*Apprentissage*)
     let nw = new Neuron.network in
     nw#learn () ;
-*)
+    
+    (*afficher les caracteres reconnus*)
+    let rec my_print_char = function
+      |[] -> ()
+      |c::l -> print_char (nw#find_char c);
+          my_print_char l in
+
+    for i = 1 to Array.length lines do
+      my_print_char lines.(i-1).Types.letters
+    done;
+          
+
+    wait_key ();
     (*on quitte*)
     
       (*Background_color_generation.*)
